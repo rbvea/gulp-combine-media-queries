@@ -124,7 +124,13 @@ module.exports = function(options) {
     var filename = path.relative(file.cwd, file.path);
     var extFilename = filename.replace('.css', '.responsive.css');
     var source = file.contents.toString('utf8');
-    var cssJson = parseCss(source);
+    var cssJson;
+    try {
+      cssJson = parseCss(source);
+    } catch(e) {
+      this.emit('error', new PluginError(PLUGIN_NAME, e.message));
+      return cb();
+    }
     var strStyles = [];
     var strMediaStyles = [];
     var processedCSS = {};
